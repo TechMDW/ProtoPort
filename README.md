@@ -8,15 +8,21 @@
 
 ## Installation
 
+### Installation with golang
+
+```bash
+go install github.com/TechMDW/ProtoPort
+```
+
 ### Windows
 
-```
+```bash
 wget https://raw.GitHubusercontent.com/TechMDW/ProtoPort/main/ProtoPort.exe
 ```
 
 ### Linux && MacOS
 
-```
+```bash
 bash -c "$(curl -s https://raw.GitHubusercontent.com/TechMDW/ProtoPort/main/ProtoPort.sh)"
 ```
 
