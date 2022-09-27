@@ -37,7 +37,7 @@ For more information visit [grpc.io](https://grpc.io/)
 
 ## Usage
 
-```
+```bash
 ProtoPort [command] [options]
 ```
 
@@ -54,7 +54,7 @@ ProtoPort [command] [options]
 | -------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
 | -inputs  | Path to proto files (if path not specified, it will scan current folder for proto files and generate them with the same folder structure) |
 | -outputs | Path to output files (if not specified, it will store the file in the current folder and it will preserve the input folder structure)     |
-| -lang    | Choose language to generate \*(required)[go, cpp, csharp, java, kotlin, objc, php, python, pyi, ruby, dart, node]                         |
+| -lang    | Choose language to generate \*[required](go, cpp, csharp, java, kotlin, objc, php, python, pyi, ruby, dart, node)                         |
 
 #### GitHub options
 
@@ -63,7 +63,7 @@ ProtoPort [command] [options]
 | -inputs  | The url to the GitHub repo (if path not specified, it will scan the whole repo for proto files and generate them with the same folder structure) |
 | -outputs | Path to output files (if not specified, it will store the file in the current folder and it will preserve the input folder structure)            |
 | -pat     | GitHub Personal Access Token (only needed if repo is private)                                                                                    |
-| -lang    | Choose language to generate \*(required)[go, cpp, csharp, java, kotlin, objc, php, python, pyi, ruby, dart, node]                                |
+| -lang    | Choose language to generate \*[required](go, cpp, csharp, java, kotlin, objc, php, python, pyi, ruby, dart, node)                                |
 
 ### TODO
 
