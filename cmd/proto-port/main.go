@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/TechMDW/ProtoPort/internal/github"
 	"github.com/TechMDW/ProtoPort/internal/protoc"
@@ -27,7 +28,7 @@ type Runner interface {
 
 func main() {
 	if err := root(os.Args[1:]); err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		os.Exit(1)
 	}
 }
@@ -65,6 +66,16 @@ func (c *Command) Run() error {
 			if _, err := os.Stat(output); os.IsNotExist(err) {
 				os.Mkdir(output, 0755)
 			}
+		} else if strings.HasPrefix(c.output, "./") {
+			if _, err := os.Stat(c.output); os.IsNotExist(err) {
+				return fmt.Errorf("output path does not exist")
+			}
+			output = c.output
+		} else {
+			if _, err := os.Stat(c.output); os.IsNotExist(err) {
+				return fmt.Errorf("output path does not exist")
+			}
+			output = c.output
 		}
 
 		if c.pat == "" {
@@ -77,6 +88,11 @@ func (c *Command) Run() error {
 			if err != nil {
 				return err
 			}
+		}
+
+		err = protoc.ReadDirForProto(input, output, c.lang, true)
+		if err != nil {
+			return err
 		}
 
 	case "basic":
@@ -99,17 +115,23 @@ func (c *Command) Run() error {
 			if _, err := os.Stat(output); os.IsNotExist(err) {
 				os.Mkdir(output, 0755)
 			}
+		} else if strings.HasPrefix(c.output, "./") {
+			if _, err := os.Stat(c.output); os.IsNotExist(err) {
+				return fmt.Errorf("output path does not exist")
+			}
+			output = c.output
 		} else {
+			if _, err := os.Stat(c.output); os.IsNotExist(err) {
+				return fmt.Errorf("output path does not exist")
+			}
 			output = c.output
 		}
 
-	}
-	log.Println("Input: ", input)
-	log.Println("Output: ", output)
-	log.Println("Lang: ", c.lang)
-	err = protoc.ReadDirForProto(input, output, c.lang)
-	if err != nil {
-		return err
+		err = protoc.ReadDirForProto(input, output, c.lang, false)
+		if err != nil {
+			return err
+		}
+
 	}
 
 	return nil

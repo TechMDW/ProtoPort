@@ -11,25 +11,28 @@ import (
 	"github.com/TechMDW/ProtoPort/internal/utilities"
 )
 
-func ReadDirForProto(path string, output string, lang string) error {
+func ReadDirForProto(path string, output string, lang string, github bool) error {
 	directory, err := os.Open(path)
 
 	if err != nil {
-		fmt.Println(err)
 		return err
 	}
 
 	files, err := directory.Readdir(-1)
 
 	if err != nil {
-		fmt.Println(err)
 		return err
 	}
 
 	for _, file := range files {
 		if file.IsDir() {
 			subdir := filepath.Join(output, file.Name())
-			ReadDirForProto(filepath.Join(path, file.Name()), subdir, lang)
+			if github {
+				if _, err := os.Stat(subdir); os.IsNotExist(err) {
+					os.Mkdir(subdir, 0755)
+				}
+			}
+			ReadDirForProto(filepath.Join(path, file.Name()), subdir, lang, github)
 		}
 
 		if utilities.CheckForFileExtension(file.Name(), ".proto") {
@@ -91,7 +94,6 @@ func BuildProto(protoPath, output, protoFile string, lang string) error {
 	command.Stderr = &stderr
 	err := command.Run()
 	if err != nil {
-		fmt.Println(fmt.Sprint(err) + ": " + stderr.String())
 		return fmt.Errorf("error building proto file")
 	}
 

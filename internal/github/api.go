@@ -15,7 +15,7 @@ import (
 )
 
 const (
-	ProtoBuilderTempDir = "ProtoPort"
+	ProtoPortDir = "ProtoPort"
 )
 
 func GithubGetContent(url string, subpath string, pat string, publicRepo bool) ([]types.GithubContentApi, error) {
@@ -80,6 +80,34 @@ func GithubReadAndGenrateProtos(githubUrl string, subPath string, pat string, pu
 		contents = firstCall
 	}
 
+	configPath, err := os.UserConfigDir()
+
+	if err != nil {
+		return "", err
+	}
+
+	techMDWPath := filepath.Join(configPath, "TechMDW")
+
+	if _, err := os.Stat(techMDWPath); err != nil {
+		if os.IsNotExist(err) {
+			err := os.Mkdir(techMDWPath, 0755)
+			if err != nil {
+				log.Fatal(err)
+			}
+		}
+	}
+
+	ProtoPortPath := filepath.Join(techMDWPath, ProtoPortDir)
+
+	if _, err := os.Stat(ProtoPortPath); err != nil {
+		if os.IsNotExist(err) {
+			err := os.Mkdir(ProtoPortPath, 0755)
+			if err != nil {
+				log.Fatal(err)
+			}
+		}
+	}
+
 	for _, content := range contents {
 		if content.Type == "dir" {
 			if subPath != "" {
@@ -116,10 +144,10 @@ func GithubReadAndGenrateProtos(githubUrl string, subPath string, pat string, pu
 			}
 
 			if subPath != "" {
-				generateFolderStructure(subPath)
-				filePath = filepath.Join(os.TempDir(), ProtoBuilderTempDir, subPath, content.Name)
+				generateFolderStructure(strings.Replace(subPath, strings.Replace(content.Name, ".proto", "", 1), "", 1))
+				filePath = filepath.Join(ProtoPortPath, subPath, content.Name)
 			} else {
-				filePath = filepath.Join(os.TempDir(), ProtoBuilderTempDir, content.Name)
+				filePath = filepath.Join(ProtoPortPath, content.Name)
 			}
 
 			file, err := os.Create(filePath)
@@ -140,14 +168,24 @@ func GithubReadAndGenrateProtos(githubUrl string, subPath string, pat string, pu
 		}
 	}
 
-	return filepath.Join(os.TempDir(), ProtoBuilderTempDir), nil
+	return filepath.Join(ProtoPortPath), nil
 }
 
 func generateFolderStructure(root string) {
 	paths := strings.Split(root, "/")
 
+	configPath, err := os.UserConfigDir()
+
+	if err != nil {
+		log.Println(err)
+	}
+
+	techMDWPath := filepath.Join(configPath, "TechMDW")
+
+	ProtoPortPath := filepath.Join(techMDWPath, ProtoPortDir)
+
 	for i := 0; i < len(paths); i++ {
-		folder := filepath.Join(os.TempDir(), ProtoBuilderTempDir, filepath.Join(paths[:i+1]...))
+		folder := filepath.Join(ProtoPortPath, filepath.Join(paths[:i+1]...))
 
 		if _, err := os.Stat(folder); os.IsNotExist(err) {
 			os.Mkdir(folder, 0755)
