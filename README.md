@@ -6,24 +6,14 @@
 
 [Protoc](https://developers.google.com/protocol-buffers/docs/downloads)
 
-## Installation
+### Download Pre Built
+
+All the Pre Built binary are available in the [release page](https://github.com/TechMDW/ProtoPort/releases)
 
 ### Installation with golang
 
 ```bash
-go install github.com/TechMDW/ProtoPort
-```
-
-### Windows
-
-```bash
-wget https://raw.GitHubusercontent.com/TechMDW/ProtoPort/main/ProtoPort.exe
-```
-
-### Linux && MacOS
-
-```bash
-bash -c "$(curl -s https://raw.GitHubusercontent.com/TechMDW/ProtoPort/main/ProtoPort.sh)"
+go install github.com/TechMDW/ProtoPort/cmd/proto-port@latest
 ```
 
 ## Protoc plugins installation
@@ -77,9 +67,9 @@ Will work on this list when I got some free time. If you want to contribute, fee
 - [ ] Arguments passthrough to protoc.
 - [ ] Arguments pass through to protoc plugins.
 - [ ] Auto installing plugins and protoc by default.
-- [ ] Add binary for windows.
-- [ ] Add binary for linux.
-- [ ] Add binary for mac.
+- [x] Add binary for windows.
+- [x] Add binary for linux.
+- [x] Add binary for mac.
 
 ## Getting help
 

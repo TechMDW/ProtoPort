@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 
@@ -17,23 +18,6 @@ type Command struct {
 	output string
 	pat    string
 	lang   string
-
-	protoc struct {
-		proto_path               string
-		encode                   string
-		deterministic_output     string
-		decode                   string
-		decode_raw               string
-		descriptor_set_in        string
-		descriptor_set_out       string
-		include_imports          string
-		include_source_info      string
-		dependency_out           string
-		error_format             string
-		fatal_warnings           string
-		print_free_field_numbers string
-		plugin                   string
-	}
 }
 type Runner interface {
 	Init([]string) error
@@ -95,7 +79,8 @@ func (c *Command) Run() error {
 			}
 		}
 
-	case "":
+	case "basic":
+		log.Println("Basic Commands")
 		if c.lang == "" {
 			return fmt.Errorf("lang is required")
 		}
@@ -105,6 +90,8 @@ func (c *Command) Run() error {
 			if _, err := os.Stat(input); os.IsNotExist(err) {
 				return fmt.Errorf("no input folder was found")
 			}
+		} else {
+			input = c.input
 		}
 
 		if c.output == "" {
@@ -112,10 +99,14 @@ func (c *Command) Run() error {
 			if _, err := os.Stat(output); os.IsNotExist(err) {
 				os.Mkdir(output, 0755)
 			}
+		} else {
+			output = c.output
 		}
 
 	}
-
+	log.Println("Input: ", input)
+	log.Println("Output: ", output)
+	log.Println("Lang: ", c.lang)
 	err = protoc.ReadDirForProto(input, output, c.lang)
 	if err != nil {
 		return err
