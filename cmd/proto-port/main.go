@@ -26,6 +26,10 @@ type Runner interface {
 	Name() string
 }
 
+var (
+	version = "0.0.6"
+)
+
 func main() {
 	if err := root(os.Args[1:]); err != nil {
 		log.Println(err)
@@ -132,6 +136,27 @@ func (c *Command) Run() error {
 			return err
 		}
 
+	case "help":
+		fmt.Println("Usage: ProtoPort [command] [options]")
+		fmt.Println("")
+		fmt.Println("Commands:")
+		fmt.Println("  github 	- generate proto files from a github repo")
+		fmt.Println("  basic 	- generate proto files from a local folder")
+		fmt.Println("  version 	- print the version of ProtoPort")
+		fmt.Println("")
+
+		fmt.Println("Options:")
+		fmt.Println("  -inputs 	- Path to proto files (if path not specified, it will scan current folder for proto files and generate them with the same folder structure)")
+		fmt.Println("  -outputs 	- Path to output files (if not specified, it will store the file in the current folder and it will preserve the input folder structure)")
+		fmt.Println("  -lang 	- Choose language to generate *(required)[go, cpp, csharp, java, kotlin, objc, php, python, pyi, ruby]")
+		fmt.Println("  -pat 		- Github Personal Access Token (only needed if repo is private)")
+		fmt.Println("")
+
+	case "version":
+		fmt.Println("ProtoProt Version " + version)
+
+	case "v":
+		fmt.Println("ProtoProt Version " + version)
 	}
 
 	return nil
@@ -162,6 +187,27 @@ func BasicCommands() *Command {
 	return bc
 }
 
+func HelpCommands() *Command {
+	bc := &Command{
+		fs: flag.NewFlagSet("help", flag.ContinueOnError),
+	}
+	return bc
+}
+
+func VersionCommands() *Command {
+	bc := &Command{
+		fs: flag.NewFlagSet("version", flag.ContinueOnError),
+	}
+	return bc
+}
+
+func VCommands() *Command {
+	bc := &Command{
+		fs: flag.NewFlagSet("v", flag.ContinueOnError),
+	}
+	return bc
+}
+
 func root(args []string) error {
 	if len(args) < 1 {
 		fmt.Println("Usage: ProtoPort [command] [options]")
@@ -169,6 +215,8 @@ func root(args []string) error {
 		fmt.Println("Commands:")
 		fmt.Println("  github 	- generate proto files from a github repo")
 		fmt.Println("  basic 	- generate proto files from a local folder")
+		fmt.Println("  version 	- print the version of ProtoPort")
+		fmt.Println("  help 	- print the help menu")
 		fmt.Println("")
 
 		fmt.Println("Options:")
@@ -183,6 +231,9 @@ func root(args []string) error {
 	cmds := []Runner{
 		GithubCommands(),
 		BasicCommands(),
+		HelpCommands(),
+		VersionCommands(),
+		VCommands(),
 	}
 
 	subcommand := os.Args[1]
