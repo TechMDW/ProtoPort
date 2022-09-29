@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"log"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -94,6 +95,7 @@ func BuildProto(protoPath, output, protoFile string, lang string) error {
 	command.Stderr = &stderr
 	err := command.Run()
 	if err != nil {
+		log.Println(fmt.Sprint(err) + ": " + stderr.String())
 		return fmt.Errorf("error building proto file")
 	}
 

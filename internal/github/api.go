@@ -18,14 +18,23 @@ const (
 	ProtoPortDir = "ProtoPort"
 )
 
+func GithubUrlParser(url string, subpath string) string {
+
+	url = strings.Replace(url, "/tree/main", "/contents", 1)
+
+	if subpath != "" {
+		url = strings.Replace(url, "https://github.com/", "https://api.github.com/repos/", 1) + subpath
+	} else {
+		url = strings.Replace(url, "https://github.com/", "https://api.github.com/repos/", 1)
+	}
+
+	return url
+}
+
 func GithubGetContent(url string, subpath string, pat string, publicRepo bool) ([]types.GithubContentApi, error) {
 	var contents []types.GithubContentApi
 
-	if subpath != "" {
-		url = strings.Replace(url, "https://github.com/", "https://api.github.com/repos/", 1) + "/contents/" + subpath
-	} else {
-		url = strings.Replace(url, "https://github.com/", "https://api.github.com/repos/", 1) + "/contents"
-	}
+	url = GithubUrlParser(url, subpath)
 
 	req, err := http.NewRequest("GET", url, nil)
 
