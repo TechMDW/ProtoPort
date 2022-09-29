@@ -14,7 +14,7 @@ import (
 
 func ReadDirForProto(path string, output string, lang string, github bool) error {
 	directory, err := os.Open(path)
-
+	
 	if err != nil {
 		return err
 	}
@@ -28,14 +28,18 @@ func ReadDirForProto(path string, output string, lang string, github bool) error
 	for _, file := range files {
 		if file.IsDir() {
 			subdir := filepath.Join(output, file.Name())
+
 			if _, err := os.Stat(subdir); os.IsNotExist(err) {
 				os.Mkdir(subdir, 0755)
 			}
+
 			ReadDirForProto(filepath.Join(path, file.Name()), subdir, lang, github)
 		}
 
 		if utilities.CheckForFileExtension(file.Name(), ".proto") {
+			
 			err := BuildProto(path, output, file.Name(), lang)
+			
 			if err != nil {
 				return err
 			}

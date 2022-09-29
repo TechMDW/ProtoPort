@@ -108,20 +108,23 @@ func (c *Command) Run() error {
 
 		if c.pat == "" {
 			input, err = github.GithubReadAndGenrateProtos(c.input, "", "", true)
+			
 			if err != nil {
 				return err
 			}
 		} else {
 			input, err = github.GithubReadAndGenrateProtos(c.input, "", c.pat, false)
+			
 			if err != nil {
 				return err
 			}
 		}
-
+		
 		err = protoc.ReadDirForProto(input, output, c.lang, true)
 		if err != nil {
 			return err
 		}
+
 
 	case "basic":
 		log.Println("Basic Commands")

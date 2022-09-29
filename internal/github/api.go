@@ -164,13 +164,11 @@ func GithubReadAndGenrateProtos(githubUrl string, subPath string, pat string, pu
 			}
 
 			file, err := os.Create(filePath)
-
+			
 			if err != nil {
 				log.Println(err)
 				return "", err
 			}
-
-			defer os.Remove(file.Name())
 
 			_, err = file.Write(body)
 
