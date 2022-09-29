@@ -28,7 +28,7 @@ type Runner interface {
 }
 
 var (
-	version = "0.0.6"
+	version = "0.0.8"
 )
 
 func main() {
@@ -114,7 +114,7 @@ func (c *Command) Run() error {
 			}
 		} else {
 			input, err = github.GithubReadAndGenrateProtos(c.input, "", c.pat, false)
-			
+
 			if err != nil {
 				return err
 			}
