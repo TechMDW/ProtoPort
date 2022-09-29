@@ -28,10 +28,8 @@ func ReadDirForProto(path string, output string, lang string, github bool) error
 	for _, file := range files {
 		if file.IsDir() {
 			subdir := filepath.Join(output, file.Name())
-			if github {
-				if _, err := os.Stat(subdir); os.IsNotExist(err) {
-					os.Mkdir(subdir, 0755)
-				}
+			if _, err := os.Stat(subdir); os.IsNotExist(err) {
+				os.Mkdir(subdir, 0755)
 			}
 			ReadDirForProto(filepath.Join(path, file.Name()), subdir, lang, github)
 		}
@@ -51,9 +49,6 @@ func BuildProto(protoPath, output, protoFile string, lang string) error {
 	var command *exec.Cmd
 
 	fullProtoFilePath := filepath.Join(protoPath, protoFile)
-	if _, err := os.Stat(output); os.IsNotExist(err) {
-		os.Mkdir(output, 0755)
-	}
 
 	if lang == "" {
 		return fmt.Errorf("language not specified")

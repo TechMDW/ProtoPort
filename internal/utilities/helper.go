@@ -1,11 +1,32 @@
 package utilities
 
 import (
+	"os"
+	"path/filepath"
 	"strings"
 )
 
 func CheckForFileExtension(name string, extension string) bool {
 	return strings.HasSuffix(name, extension)
+}
+
+func DeleteAll(path string) error {
+	d, err := os.Open(path)
+	if err != nil {
+		return err
+	}
+	defer d.Close()
+	names, err := d.Readdirnames(-1)
+	if err != nil {
+		return err
+	}
+	for _, name := range names {
+		err = os.RemoveAll(filepath.Join(path, name))
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func CheckIfLangIsSupported(lang string) bool {

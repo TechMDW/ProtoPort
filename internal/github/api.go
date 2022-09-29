@@ -22,6 +22,10 @@ func GithubUrlParser(url string, subpath string) string {
 
 	url = strings.Replace(url, "/tree/main", "/contents", 1)
 
+	if !strings.Contains(url, "/contents") {
+		url = url + "/contents"
+	}
+
 	if subpath != "" {
 		url = strings.Replace(url, "https://github.com/", "https://api.github.com/repos/", 1) + subpath
 	} else {

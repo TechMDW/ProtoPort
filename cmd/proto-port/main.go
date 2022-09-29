@@ -10,6 +10,7 @@ import (
 
 	"github.com/TechMDW/ProtoPort/internal/github"
 	"github.com/TechMDW/ProtoPort/internal/protoc"
+	"github.com/TechMDW/ProtoPort/internal/utilities"
 )
 
 type Command struct {
@@ -31,6 +32,29 @@ var (
 )
 
 func main() {
+	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
+	configPath, err := os.UserConfigDir()
+
+	if err != nil {
+		log.Println(err)
+	}
+
+	techMDWPath := filepath.Join(configPath, "TechMDW")
+
+	if _, err := os.Stat(techMDWPath); err != nil {
+		if os.IsNotExist(err) {
+			err := os.Mkdir(techMDWPath, 0755)
+			if err != nil {
+				log.Fatal(err)
+			}
+		}
+	}
+
+	ProtoPortPath := filepath.Join(techMDWPath, "ProtoPort")
+
+	// clear the previous files
+	utilities.DeleteAll(ProtoPortPath)
+
 	if err := root(os.Args[1:]); err != nil {
 		log.Println(err)
 		os.Exit(1)
