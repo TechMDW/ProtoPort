@@ -144,7 +144,7 @@ func GithubReadAndGenrateProtos(githubUrl string, subPath string, pat string, pu
 			}
 
 			if subPath != "" {
-				generateFolderStructure(strings.Replace(subPath, strings.Replace(content.Name, ".proto", "", 1), "", 1))
+				generateFolderStructure(subPath)
 				filePath = filepath.Join(ProtoPortPath, subPath, content.Name)
 			} else {
 				filePath = filepath.Join(ProtoPortPath, content.Name)
